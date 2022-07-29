@@ -44,4 +44,4 @@ cd core && npm start
 
 
 ## Deployment <a name = "deployment"></a>
-[Digital Ocean](#digitalocean.com) 
+[Digital Ocean](https://digitalocean.com) 
