@@ -21,10 +21,10 @@ router.get("/get-note/:id", isLoadedIn, async (req, res, next) => {
     if (note) {
       return res.json({ note });
     } else {
-      return res.json({ message: "Note not found" });
+      return res.status(404).json({ message: "Note not found" });
     }
   } catch {
-    return res.json({ message: "Note not found" });
+    return res.status(404).json({ message: "Note not found" });
   }
 });
 
