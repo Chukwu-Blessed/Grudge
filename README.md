@@ -5,11 +5,12 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
+- [Deployment](#deployment)
 - [Contributing](../CONTRIBUTING.md)
 
 ## About <a name = "about"></a>
 <img class="text-center" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.U8o8mf-0e_SY2AR9v1LivAHaEK%26pid%3DApi&f=1"/>
-Write about 1-2 paragraphs describing the purpose of your project.
+Let's keep this simple, this is Grudge, a 24hr challenge to the Note echosystem. To see how much of a Node I could be, I decided to make this note keeping app
 
 ## Getting Started <a name = "getting_started"></a>
 
@@ -17,30 +18,30 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+You basically need a Javascript runtime environment to get started.
 
 ```
-Give examples
+git clone https://github.com/iMiebaka/Grudge
 ```
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
-
+NB: The core folder holds all the serverside files while the frontend holds the 😉
+Install the Backend resources
 ```
-Give the example
+cd core && npm install
 ```
 
-And repeat
 
+Install the frontend resources
 ```
-until finished
+cd frontend && npm install
 ```
-
-End with an example of getting some data out of the system or using it for a little demo.
 
 ## Usage <a name = "usage"></a>
+```
+cd core && npm start
+```
 
-Add notes about how to use the system.
+
+## Deployment <a name = "deployment"></a>
+[Digital Ocean](#digitalocean.com) 
