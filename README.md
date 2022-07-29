@@ -8,7 +8,7 @@
 - [Contributing](../CONTRIBUTING.md)
 
 ## About <a name = "about"></a>
-<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.U8o8mf-0e_SY2AR9v1LivAHaEK%26pid%3DApi&f=1"/>
+<img class="text-center" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.U8o8mf-0e_SY2AR9v1LivAHaEK%26pid%3DApi&f=1"/>
 Write about 1-2 paragraphs describing the purpose of your project.
 
 ## Getting Started <a name = "getting_started"></a>
