@@ -45,3 +45,6 @@ cd core && npm start
 
 ## Deployment <a name = "deployment"></a>
 [Digital Ocean](https://digitalocean.com) 
+
+## Credit
+[Image By: Kimberly Farmer](https://unsplash.com/photos/lUaaKCUANVI)

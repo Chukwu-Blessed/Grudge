@@ -36,11 +36,9 @@ router.get("/get-notes", isLoadedIn, async (req, res, next) => {
   } else {
     page_ = 1;
   }
-  const pageLength = 2;
+  const pageLength = 6;
   let skip = (page_ - 1) * pageLength;
-  console.log(skip);
   const length = await Notes.countDocuments();
-  console.log(length)
   if (skip > length) {
     skip = 0;
   }
