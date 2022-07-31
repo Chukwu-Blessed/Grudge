@@ -1,18 +1,25 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Input } from "../components";
+import { setAuth } from "../redux/action";
 import { api } from "../request";
 
-const Login = ({ token, setToken }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginRequest = () => {
     api.post("account/login", { email, password }).then((res) => {
       if (res.status == 200) {
-        localStorage.setItem("grudge-data", JSON.stringify(res.data.data.token));
-        setToken(res.data.data.token);
+        localStorage.setItem(
+          "grudge-data",
+          JSON.stringify({ loggedIn: true, token: res.data.data.token })
+        );
+        dispatch(setAuth({ loggedIn: true, token: res.data.data.token }));
         navigate("/");
       }
     });
@@ -27,31 +34,18 @@ const Login = ({ token, setToken }) => {
           <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">
             Login
           </h2>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-100">
-              Email
-            </label>
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              id="email"
-              name="email"
-              className="w-full bg-white  backdrop-filter backdrop-blur-lg bg-opacity-20 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-100">
-              Password
-            </label>
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              id="password"
-              name="password"
-              className="w-full bg-white backdrop-filter backdrop-blur-lg bg-opacity-20 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-
+          <Input
+            text={email}
+            type={"text"}
+            label={"Email"}
+            updateText={setEmail}
+          />
+          <Input
+            text={password}
+            type={"password"}
+            label={"Password"}
+            updateText={setPassword}
+          />
           <button
             onClick={loginRequest}
             className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg "
