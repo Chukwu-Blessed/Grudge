@@ -1,51 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { Input } from "../components";
+
+const MySwal = withReactContent(Swal);
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  const signUpRequest = () => {
+    checkTextbox();
+    api.post("account/signup", { email, password, username }).then((res) => {
+      if (res.status == 201) {
+        navigate("/login");
+      }
+    });
+  };
+  const checkTextbox = () => {
+    if (username == "") {
+      return MySwal.fire({ icon: "info", html: "usename is empty" });
+    }
+    if (email == "") {
+      return MySwal.fire({ icon: "info", html: "email is empty" });
+    }
+    if (password == "") {
+      return MySwal.fire({ icon: "info", html: "password is empty" });
+    }
+  };
   return (
     <section className="text-gray-600 body-font relative">
-      {/* <div className="absolute inset-0 bg-gray-300">
-     <iframe width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" title="map" scrolling="no" src="https://maps.google.com/maps?width=100%&height=600&hl=en&q=%C4%B0zmir+(My%20Business%20Name)&ie=UTF8&t=&z=14&iwloc=B&output=embed" style="filter: grayscale(1) contrast(1.2) opacity(0.4);"></iframe>
-        </div> */}
       <div className="container px-5 py-24 mx-auto flex">
         <div className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-20">
           <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">
             SignUp
           </h2>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-100">
-              Username
-            </label>
-            <input
-              type="text"
-              id="text"
-              name="name"
-              className="w-full bg-white backdrop-filter backdrop-blur-lg bg-opacity-20 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-100">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full bg-white backdrop-filter backdrop-blur-lg bg-opacity-20 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-100">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="w-full bg-white backdrop-filter backdrop-blur-lg bg-opacity-20 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
+          <Input
+            text={username}
+            type={"text"}
+            label={"Username"}
+            updateText={setUsername}
+          />
+          <Input
+            text={email}
+            type={"text"}
+            label={"Email"}
+            updateText={setEmail}
+          />
+          <Input
+            text={password}
+            type={"text"}
+            label={"Password"}
+            updateText={setPassword}
+          />
 
-          <button className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg ">
+          <button
+            onClick={signUpRequest}
+            className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg "
+          >
             Signup
           </button>
         </div>

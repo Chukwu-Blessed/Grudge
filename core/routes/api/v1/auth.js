@@ -25,6 +25,16 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/signup", async (req, res, next) => {
   const { username, email, password } = req.body;
+  if (username == "") {
+    return res.status(400).json({ message: "usename is empty" });
+  }
+  if (email == "") {
+    return res.status(400).json({ message: "email is empty" });
+  }
+  if (password == "") {
+    return res.status(400).json({ message: "password is empty" });
+  }
+
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);

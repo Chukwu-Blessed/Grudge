@@ -3,7 +3,12 @@ const { User } = require("../models");
 
 const isLoadedIn = async (req, res, next) => {
   const bearerHearder = req.headers["authorization"];
-  if (typeof bearerHearder != "undefined") {
+  // console.log(bearerHearder);
+  // console.log(bearerHearder);
+  // console.log(bearerHearder);
+  // console.log(bearerHearder);
+  // console.log(bearerHearder);
+  if (bearerHearder != "") {
     const token = jwt.verify(bearerHearder, "12345");
     const user = await User.findOne({ publicId: token.user });
     req.user = user;

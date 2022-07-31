@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../request";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useSelector } from "react-redux";
+import { Input } from "../components";
 
 const MySwal = withReactContent(Swal);
 
 const textLength = 500;
-const Home = ({ token }) => {
+const Home = () => {
+  const stateData = useSelector((state) => state.auth);
+  // api.defaults.headers["authorization"] = stateData.token;
+
   const [canEdit, setCanEdit] = useState(false);
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
@@ -19,14 +24,12 @@ const Home = ({ token }) => {
 
   useEffect(() => {
     {
-      token == null && navigate("/login");
+      stateData.loggedIn == false ? navigate("/login") : getNotes();
     }
-    getNotes();
     return () => {};
   }, []);
 
   const getNotes = () => {
-    api.defaults.headers["authorization"] = token;
     api.get("/get-notes").then((res) => {
       if (res.status == 200) {
         setNotes(res.data.notes);
@@ -34,21 +37,30 @@ const Home = ({ token }) => {
     });
   };
 
-  const deleteNote = () => {
+  const deleteNote = (id) => {
     MySwal.fire({
-      title: "Do you want to save the changes?",
+      title: "Do you want to delete this note?",
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonColor: "red",
       denyButtonColor: "gray",
-      denyButtonText: `Don't Forgive`,
-      confirmButtonText: "Forgive",
+      denyButtonText: `Don't Forgive 😢`,
+      confirmButtonText: "Forgive 🤗",
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        MySwal.fire("Saved!", "", "success");
-      } else if (result.isDenied) {
-        MySwal.fire("Changes are not saved", "", "info");
+        api.delete(`/delete-note/${id}`).then((res) => {
+          if (res.status == 200) {
+            MySwal.fire({
+              text: res.data.message,
+              icon: "success",
+              timer: 1000,
+              showConfirmButton: false,
+              position: "top-end",
+            });
+            getNotes();
+          }
+        });
       }
     });
   };
@@ -110,15 +122,44 @@ const Home = ({ token }) => {
     setDetails(item.details);
     setEditId(item._id);
   };
+
+  const searchNoteTxt = (value) => {
+    if (value == "") {
+      getNotes();
+    } else {
+      api.get(`/get-note?s=${value}`).then((res) => {
+        if (res.status == 200) {
+          setNotes(res.data.notes);
+        }
+      });
+    }
+  };
   return (
     <section className="text-gray-600 body-font relative ">
-      <div className="container px-5 py-24 mx-auto flex flex-nowrap space-x-2">
-        <div className="lg:w-2/3 md:w-1/2 flex flex-wrap ">
+      <div className="container px-5 py-24 mx-auto lg:flex lg:space-x-2">
+        <div className="lg:w-2/3 flex flex-wrap space-y-2">
+          <div className="bg-white rounded-lg p-4 flex justify-between md:ml-auto w-full mt-2 lg:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-80">
+            <span className="text-xl">Notes</span>
+            <div className="space-x-2">
+              <input
+                type="text"
+                className="rounded outline outline-1 outline-slate-400 px-1 lg:w-auto w-32"
+                placeholder="search note"
+                onChange={(e) => searchNoteTxt(e.target.value)}
+              />
+              <button className="opacity-100 outline outline-1 px-3 outline-slate-400 rounded hover:bg-slate-400 hover:text-white ease-linear duration-200">
+                Previous
+              </button>
+              <button className="opacity-100 outline outline-1 px-3 outline-slate-400 rounded hover:bg-slate-400 hover:text-white ease-linear duration-200">
+                Next
+              </button>
+            </div>
+          </div>
           {notes.map((item) => {
             return (
               <div
                 key={item._id}
-                className="lg:w-1/3 md:w-full bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-80"
+                className="bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-2 lg:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-80"
               >
                 <div className="flex-1 flex flex-col">
                   <label className="leading-7 text-lg text-gray-500">
@@ -138,7 +179,7 @@ const Home = ({ token }) => {
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteNote(item)}
+                    onClick={() => deleteNote(item._id)}
                     className="bg-red-400 w-max p-1 rounded px-2 text-gray-100"
                   >
                     Forgive
@@ -148,25 +189,17 @@ const Home = ({ token }) => {
             );
           })}
         </div>
-        <div className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-20">
+        <div className="lg:w-1/3 bg-white rounded-lg p-8 flex flex-col lg:mt-0 mt-2 md:ml-auto w-full relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-20">
           <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">
             {canEdit ? "Edit Note" : " Add Note"}
           </h2>
 
-          <div className="relative mb-4">
-            <label htmlFor="email" className="leading-7 text-sm text-gray-600">
-              Title
-            </label>
-            <input
-              type="text"
-              id="text"
-              name="text"
-              value={title}
-              autoComplete="off"
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded bg-white backdrop-filter backdrop-blur-lg bg-opacity-20 border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-black py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            />
-          </div>
+          <Input
+            text={title}
+            type={"text"}
+            label={"Title"}
+            updateText={setTitle}
+          />
           <div className="relative mb-4">
             <label
               htmlFor="message"

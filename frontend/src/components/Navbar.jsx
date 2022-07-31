@@ -1,24 +1,18 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setAuth } from "../redux/action";
+import { authDefault } from "../redux/reducer";
 
-const Navbar = ({ token, setToken }) => {
-  const [signedIn, setSignedIn] = useState(false);
+const Navbar = () => {
+  const stateData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const logOut = () => {
-    setSignedIn(true);
-    setToken(null);
-    localStorage.setItem("grudge-data", null);
+    dispatch(setAuth(authDefault));
+    localStorage.setItem("grudge-data", JSON.stringify());
+    navigate("/login");
   };
-  useEffect(() => {
-    if (token == null) {
-      logOut();
-    } else {
-      setSignedIn(false);
-    }
-
-    return () => {};
-  }, []);
 
   return (
     <header className="body-font backdrop-filter backdrop-blur-lg bg-opacity-20">
@@ -27,18 +21,7 @@ const Navbar = ({ token, setToken }) => {
           to=""
           className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-          </svg>
+          <img src="../../public/icons8-angry-64.png" className="w-10" alt="" />
           <span className="ml-3 text-xl text-gray-100 ">Grugde</span>
         </Link>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center space-x-3">
@@ -48,7 +31,7 @@ const Navbar = ({ token, setToken }) => {
           >
             Home
           </Link>
-          {signedIn ? (
+          {!stateData.loggedIn ? (
             <>
               <Link
                 to={"/signup"}
@@ -58,7 +41,7 @@ const Navbar = ({ token, setToken }) => {
               </Link>
               <Link
                 to={"/login"}
-                className="inline-flex items-center justify-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base md:mt-4 lg:mt-0 ease-in-out duration-300"
+                className="inline-flex items-center justify-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-0 ease-in-out duration-300"
               >
                 Login
                 <svg
@@ -77,7 +60,7 @@ const Navbar = ({ token, setToken }) => {
           ) : (
             <button
               onClick={logOut}
-              className="inline-flex items-center  bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base md:mt-4 lg:mt-0 ease-in-out duration-300"
+              className="inline-flex items-center  bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-0 ease-in-out duration-300"
             >
               Logout
               <svg

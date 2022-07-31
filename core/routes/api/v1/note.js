@@ -69,7 +69,7 @@ router.get("/get-note", isLoadedIn, async (req, res, next) => {
 
 router.put("/edit-note/:id", isLoadedIn, async (req, res, next) => {
   const { title, details } = req.body;
-  const { id, page } = req.params;
+  const { id } = req.params;
   const note = await Notes.findOne({ users: req.user, _id: Object(id) });
   if (note == null) {
     return res.status(404).json({ message: "Note not found 🥳" });

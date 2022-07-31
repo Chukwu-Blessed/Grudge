@@ -48,3 +48,4 @@ cd core && npm start
 
 ## Credit
 [Image By: Kimberly Farmer](https://unsplash.com/photos/lUaaKCUANVI)
+[Favicon Icon8](https://icons8.com/icon/hRJWqiyaLuyi/angry)
