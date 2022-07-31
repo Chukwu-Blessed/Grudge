@@ -18,7 +18,7 @@ describe("MyJSUtilities", () => {
   describe(">Internal Checks", () => {
     it("check on the pagination algorithm", () => {
       expect(pagination(null, 51, 10)).toBe(6);
-    });
+    }); 
     it("check on the pagination algorithm PT 2", () => {
       expect(pagination_(1, 51, 10)).toStrictEqual([
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
