@@ -1,18 +1,16 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../request";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { useSelector } from "react-redux";
-import { Input } from "../components";
-
-const MySwal = withReactContent(Swal);
+import { Input, MySwal, swal } from "../components";
 
 const textLength = 500;
 const Home = () => {
   const stateData = useSelector((state) => state.auth);
-  // api.defaults.headers["authorization"] = stateData.token;
+
+  const previousBtn = useRef()
+  const nextBtn = useRef()
 
   const [canEdit, setCanEdit] = useState(false);
   const [title, setTitle] = useState("");
@@ -47,17 +45,10 @@ const Home = () => {
       denyButtonText: `Don't Forgive 😢`,
       confirmButtonText: "Forgive 🤗",
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         api.delete(`/delete-note/${id}`).then((res) => {
           if (res.status == 200) {
-            MySwal.fire({
-              text: res.data.message,
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
-              position: "top-end",
-            });
+            swal(res.data.message, "success");
             getNotes();
           }
         });
@@ -73,15 +64,8 @@ const Home = () => {
     api.post(`/add-note`, data).then((res) => {
       if (res.status == 200) {
         getNotes();
-        MySwal.fire({
-          text: res.data.message,
-          icon: "success",
-          timer: 1000,
-          showConfirmButton: false,
-          position: "top-end",
-        });
-        setDetails("");
-        setEditId("");
+        swal(res.data.message, "success");
+        cancelEdit()
       }
     });
   };
@@ -94,17 +78,8 @@ const Home = () => {
     api.put(`/edit-note/${editId}`, data).then((res) => {
       if (res.status == 200) {
         getNotes();
-        MySwal.fire({
-          text: res.data.message,
-          timer: 1000,
-          icon: "success",
-          showConfirmButton: false,
-          position: "top-end",
-        });
-        setCanEdit(false);
-        setTitle("");
-        setDetails("");
-        setEditId("");
+        swal(res.data.message, "success");
+        cancelEdit()
       }
     });
   };
@@ -136,7 +111,7 @@ const Home = () => {
   };
   return (
     <section className="text-gray-600 body-font relative ">
-      <div className="container px-5 py-24 mx-auto lg:flex lg:space-x-2">
+      <div className="container px-5 py-3 lg:py-24 mx-auto lg:flex lg:space-x-2">
         <div className="lg:w-2/3 flex flex-wrap space-y-2">
           <div className="bg-white rounded-lg p-4 flex justify-between md:ml-auto w-full mt-2 lg:mt-0 relative z-10 shadow-md backdrop-filter backdrop-blur-lg bg-opacity-80">
             <span className="text-xl">Notes</span>
